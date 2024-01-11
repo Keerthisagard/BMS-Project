@@ -1,0 +1,35 @@
+create database book_management_systemdb;
+
+
+create table student
+(
+   rollno int primary key,
+   name varchar(50) not null
+)
+
+
+insert into student(rollno,name) values (101, 'Anil');
+insert into student(rollno,name) values (202, 'Kiran');
+insert into student(rollno,name) values (303, 'Kiarn');
+
+select * from student;
+
+select rollno, name from student;
+
+select * from student where name='kiran';
+
+
+update student set name='Karan' where usn=1EC500;
+
+delete from student where rollno=303;
+
+
+
+CREATE - Insert
+READ   - Select
+UPDATE - Update
+DELETE - Delete
+
+
+ALTER table author
+CHANGE COLUMN name author_name varchar(50);

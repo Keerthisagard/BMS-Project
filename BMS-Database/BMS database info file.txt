@@ -1,0 +1,138 @@
+-- Inserting the isbn,title,books,category and number of books.--
+insert into book (isbn, title, category, no_of_books) values ('ABC12', 'The Lord of the Rings', 'Fantasy', '1');
+insert into book (isbn, title, category, no_of_books) values ('ABC13', 'A Game of thrones', 'Fantasy', '2');
+insert into book (isbn, title, category, no_of_books) values ('ABC14', 'Gothic', 'Horror', '3');
+insert into book (isbn, title, category, no_of_books) values ('ABC15', 'Paranormal', 'Horror', '4');
+insert into book (isbn, title, category, no_of_books) values ('ABC16', 'The Hobbit', 'Adventure', '5');
+insert into book (isbn, title, category, no_of_books) values ('ABC17', 'Into the wild', 'Adventure', '1');
+
+
+-- Inserting the Author names, phone number's and isbn.-- 
+insert into author (author_name, phone_number, isbn) values ('J.R.R Tolkien', '1234', 'ABC12');
+insert into author (author_name, phone_number, isbn) values ('George R.R martin', '1235', 'ABC13');
+insert into author (author_name, phone_number, isbn) values ('Horace walpole', '1236', 'ABC14');
+insert into author (author_name, phone_number, isbn) values ('Patricia briggs', '1237', 'ABC15');
+insert into author (author_name, phone_number, isbn) values ('J.R.R Tolkien', '1238', 'ABC16');
+insert into author (author_name, phone_number, isbn) values ('Jon krakauer', '1239', 'ABC17');
+
+
+--Update no pf books.--
+update book set no_of_books='10' where isbn='ABC12';
+update book set no_of_books='15' where isbn='ABC13';
+update book set no_of_books='20' where isbn='ABC14';
+update book set no_of_books='10' where isbn='ABC15';
+update book set no_of_books='7' where isbn='ABC16';
+update book set no_of_books='12' where isbn='ABC17';
+
+
+--to combine the two tables.--
+select b.isbn, b.title, b.category, a.author_name, a.phone_number
+from book b, author a
+where b.isbn = a.isbn;
+
+-- To search in that category.--
+and b.category = 'Horror';
+
+
+-- Alter the column name after the table is created.--
+alter table author
+change column name author_name varchar(50);
+
+
+--Select the table.--
+select * from book;
+
+-- Select the book by typing any one of the word from that title, it will show the book.--
+select * form book where title like '%rings%';
+
+
+
+--Select the category to show the books in available in that category. --
+select * form book where category like '%fantasy%';
+
+
+--Select the author name to show the books of that author.--
+select * from Book where isbn in (select isbn from author where author_name LIKE '%J.R.R%');
+
+
+
+-- Join the book isbn with author isbn.--
+select book.isbn, book.title, author.author_name, author.phone_number
+from book
+join author on book.isbn = author.isbn;
+
+
+-- Inserting the usn and name to student table.--
+insert into student (usn, name) values ('1EC404', 'Keerthi');
+insert into student (usn, name) values ('1EC405', 'Sagar');
+insert into student (usn, name) values ('1EC406', 'Anil');
+
+
+-- Update the student name and usn.--
+update student set student_name='Karan' where usn='1EC500';
+
+--Delete the student name and usn.--
+delete from student where usn='1EC500';
+delete from student where studnet_name='karan';
+
+
+-- Issuing the book by inserting the isbn,usn and return date, The issue date will be the current date.--
+insert into issue_books (isbn, usn, issue_date, return_date) values ('ABC13', '1EC404', curdate(), '2023-12-26');
+
+
+
+--Joining the issue isbn with book isbn and also joining the issue usn and student usn, So that we can see the issue books with return date using the student usn.--
+select book.title, student.name, issue_books.return_date
+from issue_books
+join book on issue_books.isbn = book.isbn
+join student on issue_books.usn = student.usn
+where student.usn = '1EC404';
+
+
+
+-- Using return date.--
+select book.title, student.student_name, issue_books.return_date
+from issue_books
+join book on issue_books.isbn = book.isbn
+join student on issue_books.usn = student.usn
+where issue_books.return_date = '2023-12-26';
+
+
+
+
+-- Create trigger to update automatically in book about the number of books.--
+delimiter //
+create trigger after_issue_insert
+after insert on issue_books
+for each row
+begin
+
+update book
+set no_of_books = no_of_books -1
+where isbn = new.isbn and no_of_books > 0;
+end;
+//
+delimiter ;
+
+
+
+-- Join return isbn and issue isbn and return usn with issue usn.--
+select return_books.*, issue_books.issue_date
+from return_books
+join issue_books on return_books.isbn = issue_books.isbn and return_books.usn = issue_books.usn;
+
+
+-- Drop the created trigger. --
+drop trigger if exists book_management_systemdb.  after_issue_delete;
+
+
+-- To know the information of triggers created.--
+select *
+from information_schema.triggers
+where trigger_schema = 'book_management_systemdb'
+and trigger_name =  'after_issue_insert';
+
+
+
+-- To delete the database.--
+drop database book_management_systemdb;

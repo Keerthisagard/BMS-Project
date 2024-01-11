@@ -1,0 +1,48 @@
+-- Create book table.--
+
+create table book
+(
+  isbn varchar(50) primary key,
+  title varchar(50) not null,
+  category varchar(50) not null,
+  no_of_books int
+);
+
+
+-- Create author table. --
+
+create table author
+(
+  author_id INT PRIMARY KEY AUTO_INCREMENT,
+  author_name varchar(50) not null,
+  phone_number varchar(10) not null,
+  isbn varchar(50),
+  foreign key (isbn) references book(isbn)
+); 
+
+
+-- Create student table.--
+
+  create table student
+(
+    usn varchar(10) primary key,
+    name varchar(50) not null
+);
+
+-- Create issue table.--
+
+create table issue_books
+(
+  issue_id int  primary key auto_increment,
+  usn varchar(10),
+  foreign key(usn) references student(usn),
+  issue_date DATE,
+  return_date DATE,
+  isbn varchar(50),
+  foreign key(isbn) references book(isbn)
+); 
+
+
+
+--delete a table which is already created.--
+drop table if exists book_management_systemdb.return_books;
