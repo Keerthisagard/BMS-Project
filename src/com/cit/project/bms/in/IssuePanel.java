@@ -94,9 +94,15 @@ public class IssuePanel extends JPanel {
             return;
         }
 
+        // Check if the student with the provided USN exists
+        if (!dao.isStudentExists(usn)) {
+            showMessage("Student with USN " + usn + " does not exist.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         List<Issue> issuedBooks = dao.getBooksIssuedToStudent(usn);
         updateIssuedBooksTable(issuedBooks);
-        clearTextFields(); 
+        clearTextFields();
     }
 
     private void updateIssuedBooksTable(List<Issue> issuedBooks) {

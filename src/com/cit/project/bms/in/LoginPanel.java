@@ -7,39 +7,50 @@ import java.awt.event.ActionListener;
 
 public class LoginPanel extends JPanel {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -671807527452645677L;
-	@SuppressWarnings("unused")
+    private static final long serialVersionUID = -671807527452645677L;
+    @SuppressWarnings("unused")
 	private BookManagementSystemEXT parentFrame;
     private JTextField userIdField;
     private JPasswordField passwordField;
+    private JToggleButton showPasswordButton;
 
     public LoginPanel(BookManagementSystemEXT parentFrame) {
         this.parentFrame = parentFrame;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setPreferredSize(new Dimension(300, 200)); 
+        setPreferredSize(new Dimension(300, 200));
 
         JLabel welcomeLabel = new JLabel("Welcome to Book Management System");
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         add(welcomeLabel);
-        add(Box.createRigidArea(new Dimension(0, 10))); 
+        add(Box.createRigidArea(new Dimension(0, 10)));
 
-        add(createLabelAndTextField("User ID:", userIdField = new JTextField(15)));
-        add(createLabelAndPasswordField("Password:", passwordField = new JPasswordField(15)));
+        JPanel userIdPanel = createLabelAndTextField("User ID:", userIdField = new JTextField(15), FlowLayout.CENTER);
+        JPanel passwordPanel = createLabelAndPasswordField("Password:", passwordField = new JPasswordField(15));
+
+        showPasswordButton = new JToggleButton("\uD83D\uDD12"); 
+        StylishButtonStyle.applyStyle(showPasswordButton);
+
+        showPasswordButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Toggle the password visibility
+                if (showPasswordButton.isSelected()) {
+                    passwordField.setEchoChar((char) 0); 
+                } else {
+                    passwordField.setEchoChar('*'); 
+                }
+            }
+        });
+        passwordPanel.add(showPasswordButton);
+
+        // Adjusted alignment
+        add(userIdPanel);
+        add(passwordPanel);
 
         JButton loginButton = new JButton("Login");
-
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
         StylishButtonStyle.applyStyle(loginButton);
 
         loginButton.addActionListener(new ActionListener() {
@@ -49,7 +60,6 @@ public class LoginPanel extends JPanel {
                 char[] passwordChars = passwordField.getPassword();
                 String password = new String(passwordChars);
 
-               
                 boolean isAuthenticated = authenticateUser(userId, password);
 
                 if (isAuthenticated) {
@@ -68,8 +78,8 @@ public class LoginPanel extends JPanel {
         add(buttonPanel);
     }
 
-    private JPanel createLabelAndTextField(String labelText, JTextField textField) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+    private JPanel createLabelAndTextField(String labelText, JTextField textField, int alignment) {
+        JPanel panel = new JPanel(new FlowLayout(alignment, 5, 5));
 
         JLabel label = new JLabel(labelText);
         label.setPreferredSize(new Dimension(80, 25));
@@ -81,7 +91,7 @@ public class LoginPanel extends JPanel {
     }
 
     private JPanel createLabelAndPasswordField(String labelText, JPasswordField passwordField) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 5)); // Adjusted alignment
 
         JLabel label = new JLabel(labelText);
         label.setPreferredSize(new Dimension(80, 25));

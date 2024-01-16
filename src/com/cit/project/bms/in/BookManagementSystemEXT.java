@@ -24,7 +24,7 @@ public class BookManagementSystemEXT extends JFrame {
     public BookManagementSystemEXT() {
         dao = new BookManagementSystemDAO();
 
-        setTitle("Library Management System");
+        setTitle("Book Management System");
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
