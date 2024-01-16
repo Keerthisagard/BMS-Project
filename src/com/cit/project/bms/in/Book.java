@@ -1,5 +1,8 @@
 package com.cit.project.bms.in;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Book {
 	
 		private String isbn; // Primary Key
@@ -19,7 +22,7 @@ public class Book {
 		}
 		
 		
-		public Book(String isbn, String title, String category, int no_of_books) {
+		public Book(int no_of_books, String title, String category, String isbn) {
 			super();
 			this.isbn = isbn;
 			this.title = title;
@@ -27,7 +30,22 @@ public class Book {
 			this.no_of_books = no_of_books;
 		}
 
+		
+		 public Book(ResultSet resultSet) throws SQLException {
+		        this.isbn = resultSet.getString("isbn");
+		        this.title = resultSet.getString("title");
+		        this.category = resultSet.getString("category");
+		        this.no_of_books = resultSet.getInt("no_of_books");
 
+		        // Assuming that the Author details are present in the ResultSet
+		        this.author = new Author(
+		            resultSet.getString("author_name"),
+		            resultSet.getString("phone_number"),
+		            resultSet.getString("isbn")
+		        );
+		 }
+
+		
 		public String getIsbn() {
 			return isbn;
 		}

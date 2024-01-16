@@ -10,6 +10,8 @@ public class Student {
 			this.usn = usn;
 			this.name = name;
 		}
+		
+		
 		public String getUsn() {
 			return usn;
 		}
